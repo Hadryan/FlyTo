@@ -15,5 +15,15 @@ defaults = {
 }
 ```
 
+Example:
+```
+jQuery(document).ready(function($){
+  $('#add-to-cart').click(function(e){
+    e.preventDefault();
+    $('.product-image img').flyTo('#cart', { opacity: 400 });
+  });
+});
+```
+
 ### Future
 I plan on adding in some features later on if it gets used. Please feel free to add a issue if you find something wrong or a pull request if you're feeling helpful.
