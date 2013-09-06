@@ -1,7 +1,7 @@
 (function ($) {
   $.fn.flyTo = function(to, options) {
     var $this = this,
-    $to = $(to),
+    $to = typeof to === 'object' ? to : $(to),
     defaults = {
       opacity: 250,
       speed: 1000,
