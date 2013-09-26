@@ -1,31 +1,44 @@
 (function ($) {
-  $.fn.flyTo = function(to, options) {
-    var $this = this,
-    $to = typeof to === 'object' ? to : $(to),
-    defaults = {
-      opacity: 250,
-      speed: 1000,
-      fadeOutSpeed: 150
-    };
+  'use strict';
 
-    var opts = $.extend({}, defaults, options);
+  $.fn.flyTo = function(to, options){
+    var opts, 
+        $to = to.jquery ? to : $(to),
+        end = $to.offset(),
+        defaults = {
+          opacity: 1,
+          speed: 1000,
+          easing: 'swing',
+          fadeOutSpeed: 150
+        };
 
-
-    var start = $this.offset();
-    var newFly = $this.clone().css({position: 'fixed', left: start.left, top: start.top, width: $this.width(), height: $this.height()}).fadeTo(0, opts.opacity).appendTo('body');
-    var end = $to.offset();
+    opts = $.extend({}, defaults, options);
     
-    newFly.animate({
-      top: (end.top - $(window).scrollTop()),
-      left: end.left
-    }, opts.speed, function(){
-      $this.trigger('hide')
-      newFly.fadeTo(opts.fadeOutSpeed,0, function(){
-        newFly.remove();
-        $this.trigger('hidden')
-      });
-    });
+    return this.each(function(){
+      var $this = $(this),
+        $newFly = $this.clone(),
+        start = $this.offset();
 
-    return $this;
+      $newFly
+        .css({
+          position: 'absolute', 
+          left: start.left, 
+          top: start.top, 
+          width: $this.width(), 
+          height: $this.height()
+        })
+        .fadeTo(0, opts.opacity)
+        .appendTo('body')
+        .animate({
+          top: end.top - (($newFly.outerHeight() - $to.outerHeight()) / 2),
+          left: end.left - (($newFly.outerWidth() - $to.outerWidth()) / 2)
+        }, opts.speed, opts.easing, function(){
+          $this.trigger('hide');
+          $newFly.fadeTo(opts.fadeOutSpeed, 0, function(){
+            $newFly.remove();
+            $this.trigger('hidden');
+          });
+        });
+    });
   };
 })(jQuery);
